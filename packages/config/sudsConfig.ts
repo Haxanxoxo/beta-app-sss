@@ -7,7 +7,7 @@
  */
 
 // ─── Scale ──────────────────────────────────────────────
-export const SUDS_MIN = 0;
+export const SUDS_MIN = 0.5;
 export const SUDS_MAX = 10;
 export const SUDS_STEP = 0.5;
 export const SUDS_DECIMAL_PLACES = 1;

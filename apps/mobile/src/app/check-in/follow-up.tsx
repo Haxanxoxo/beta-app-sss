@@ -12,7 +12,7 @@ export default function FollowUpCheckInScreen() {
     const insets = useSafeAreaInsets();
     const { currentSudsValue, setSudsValue, submitFollowUpCheckIn, checkIns } = useResetEngine();
 
-    const beforeValue = checkIns[0]?.sudsRating ?? 5;
+    const beforeValue = checkIns[0]?.sudsRating ?? 0.5;
     const guidance = CATEGORY_GUIDANCE[getSudsCategory(currentSudsValue)];
 
     const handleContinue = () => {
@@ -36,7 +36,10 @@ export default function FollowUpCheckInScreen() {
 
                 <View style={styles.header}>
                     <Text style={styles.stageLabel}>CHECK AGAIN</Text>
-                    <Button label="Close" variant="ghost" size="sm" onPress={() => router.push('/(tabs)')} />
+                    <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+                        <Button label="Get Help" variant="ghost" size="sm" onPress={() => router.push('/(tabs)/support')} />
+                        <Button label="Close" variant="ghost" size="sm" onPress={() => router.push('/(tabs)')} />
+                    </View>
                 </View>
 
                 <SectionHeader

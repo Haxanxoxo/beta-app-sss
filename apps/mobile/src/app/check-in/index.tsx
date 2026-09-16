@@ -45,7 +45,10 @@ export default function InitialCheckInScreen() {
 
                 <View style={styles.header}>
                     <Text style={styles.stageLabel}>CHECK IN</Text>
-                    <Button label="Close" variant="ghost" size="sm" onPress={() => router.push('/(tabs)')} />
+                    <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+                        <Button label="Get Help" variant="ghost" size="sm" onPress={() => router.push('/(tabs)/support')} />
+                        <Button label="Close" variant="ghost" size="sm" onPress={() => router.push('/(tabs)')} />
+                    </View>
                 </View>
 
                 <SectionHeader

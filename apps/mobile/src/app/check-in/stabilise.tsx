@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, LayoutAnimation } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, UIManager } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useResetEngine } from '../../store/resetEngine';
@@ -15,15 +15,18 @@ export default function StabiliseScreen() {
     const [selectedStrategy, setSelectedStrategy] = useState<string | null>(null);
 
     const toggleStrategy = (id: string) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setSelectedStrategy(prev => prev === id ? null : id);
         if (id) {
-            markStabiliseAttempted(id, false);
+            try {
+                markStabiliseAttempted(id, false);
+            } catch (_) { /* ignore duplicate errors */ }
         }
     };
 
     const handleTryThis = (id: string) => {
-        markStabiliseCompleted(id);
+        try {
+            markStabiliseCompleted(id);
+        } catch (_) { /* ignore duplicate errors */ }
     };
 
     const hasCompletedOne = stabiliseAttempts.some(a => a.completedAt != null);

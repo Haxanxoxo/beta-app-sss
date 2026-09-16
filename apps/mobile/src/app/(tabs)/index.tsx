@@ -1,13 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useResetEngine } from '../../store/resetEngine';
-import { colors, spacing, typography, fontSizes } from '../../constants/tokens';
-import { Button, SectionHeader, Card } from '../../components';
+import { colors, spacing, typography, fontSizes, radii } from '../../constants/tokens';
+import { Button, SectionHeader } from '../../components';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function HomeScreen() {
     const router = useRouter();
     const { currentSession, startNewSession } = useResetEngine();
+    const insets = useSafeAreaInsets();
 
     const handleResetPress = () => {
         if (currentSession && currentSession.status !== 'COMPLETED') {
@@ -20,7 +23,7 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <ScrollView contentContainerStyle={[styles.scrollContent, { paddingTop: Math.max(insets.top, spacing.xl), paddingBottom: Math.max(insets.bottom, spacing.xl) }]}>
                 {/* Header Section */}
                 <View style={styles.header}>
                     <Text style={styles.brandTitle}>SSS RESET KIT</Text>
@@ -38,47 +41,44 @@ export default function HomeScreen() {
                     align="left"
                 />
 
-                {/* Primary Action */}
-                <Card noPadding style={styles.primaryCard}>
-                    <View style={styles.cardPadding}>
-                        <Text style={styles.cardTitle}>
-                            {currentSession && currentSession.status !== 'COMPLETED' ? "Continue my reset" : "I need help resetting"}
-                        </Text>
-                        <Text style={styles.cardSubtitle}>Check in and choose a support</Text>
-                        <Button
-                            label="Check in"
-                            onPress={handleResetPress}
-                            style={styles.primaryButton}
-                            labelStyle={styles.primaryButtonText}
-                        />
+                {/* Primary Action (Interactive Surface) */}
+                <Pressable onPress={handleResetPress} style={styles.primarySurface}>
+                    <View style={styles.primaryContent}>
+                        <View style={styles.primaryTextGroup}>
+                            <Text style={styles.primaryTitle}>
+                                {currentSession && currentSession.status !== 'COMPLETED' ? "Continue my reset" : "I need help resetting"}
+                            </Text>
+                            <Text style={styles.primarySubtitle}>Check in and choose a support</Text>
+                        </View>
+                        <View style={styles.primaryIconContainer}>
+                            <Ionicons name="arrow-forward" size={24} color={colors.deepNavy} />
+                        </View>
                     </View>
-                </Card>
+                </Pressable>
 
-                {/* Secondary Destinations */}
-                <View style={styles.rowCards}>
-                    <Card style={styles.secondaryCard}>
-                        <Text style={styles.secondaryTitle}>My Personal Reset Plan</Text>
-                        <Text style={styles.secondarySubtitle}>My signs, choices and supports</Text>
-                        <Button
-                            label="View Plan"
-                            variant="outline"
-                            size="sm"
-                            onPress={() => router.push('/(tabs)/plan')}
-                            style={styles.secondaryButton}
-                        />
-                    </Card>
+                {/* Secondary Destinations (Interactive Rows) */}
+                <View style={styles.secondarySection}>
+                    <Pressable onPress={() => router.push('/(tabs)/plan')} style={styles.navRow}>
+                        <View style={styles.navRowIcon}>
+                            <Ionicons name="clipboard-outline" size={24} color={colors.deepNavy} />
+                        </View>
+                        <View style={styles.navRowContent}>
+                            <Text style={styles.navRowTitle}>My Personal Reset Plan</Text>
+                            <Text style={styles.navRowSubtitle}>My signs, choices and supports</Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={20} color={colors.secondaryText} />
+                    </Pressable>
 
-                    <Card style={styles.secondaryCard}>
-                        <Text style={styles.secondaryTitle}>My Support People</Text>
-                        <Text style={styles.secondarySubtitle}>Connect with someone safe</Text>
-                        <Button
-                            label="Get Support"
-                            variant="outline"
-                            size="sm"
-                            onPress={() => router.push('/(tabs)/support')}
-                            style={styles.secondaryButton}
-                        />
-                    </Card>
+                    <Pressable onPress={() => router.push('/(tabs)/support')} style={styles.navRow}>
+                        <View style={styles.navRowIcon}>
+                            <Ionicons name="people-outline" size={24} color={colors.deepNavy} />
+                        </View>
+                        <View style={styles.navRowContent}>
+                            <Text style={styles.navRowTitle}>My Support People</Text>
+                            <Text style={styles.navRowSubtitle}>Connect with someone safe</Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={20} color={colors.secondaryText} />
+                    </Pressable>
                 </View>
 
                 {/* Staff Guidance / Auth Controls (Development) */}
@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.mainBackground,
     },
     scrollContent: {
-        padding: spacing.xl,
-        paddingTop: spacing['3xl'], // Safe area approx
+        paddingHorizontal: spacing.xl,
+        paddingBottom: spacing['3xl'],
     },
     header: {
         flexDirection: 'row',
@@ -125,58 +125,83 @@ const styles = StyleSheet.create({
     getHelpText: {
         color: colors.stepForwardCoral,
     },
-    primaryCard: {
+    primarySurface: {
         backgroundColor: colors.deepNavy,
-        marginBottom: spacing.xl,
-    },
-    cardPadding: {
+        borderRadius: radii.card,
         padding: spacing.xl,
-        paddingVertical: spacing['2xl'],
+        marginBottom: spacing.xl,
+        overflow: 'hidden',
     },
-    cardTitle: {
+    primaryContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    primaryTextGroup: {
+        flex: 1,
+        paddingRight: spacing.md,
+    },
+    primaryTitle: {
         ...typography.serifMedium,
         fontSize: fontSizes['2xl'],
         color: colors.white,
         marginBottom: spacing.xs,
     },
-    cardSubtitle: {
+    primarySubtitle: {
         ...typography.sans,
         fontSize: fontSizes.base,
         color: colors.softBlue,
-        marginBottom: spacing.xl,
     },
-    primaryButton: {
+    primaryIconContainer: {
+        width: 44,
+        height: 44,
+        borderRadius: radii.full,
         backgroundColor: colors.white,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    primaryButtonText: {
-        color: colors.deepNavy,
-    },
-    rowCards: {
-        gap: spacing.base,
+    secondarySection: {
+        backgroundColor: colors.white,
+        borderRadius: radii.card,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: colors.softBorder,
         marginBottom: spacing.xl,
     },
-    secondaryCard: {
-        marginBottom: spacing.sm,
+    navRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: spacing.lg,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.mainBackground,
     },
-    secondaryTitle: {
+    navRowIcon: {
+        width: 44,
+        height: 44,
+        borderRadius: radii.button,
+        backgroundColor: colors.softBlue,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: spacing.md,
+    },
+    navRowContent: {
+        flex: 1,
+    },
+    navRowTitle: {
         ...typography.sansSemiBold,
-        fontSize: fontSizes.lg,
+        fontSize: fontSizes.base,
         color: colors.deepNavy,
-        marginBottom: spacing.xs,
+        marginBottom: 2,
     },
-    secondarySubtitle: {
+    navRowSubtitle: {
         ...typography.sans,
         fontSize: fontSizes.sm,
         color: colors.secondaryText,
-        marginBottom: spacing.lg,
-    },
-    secondaryButton: {
-        alignSelf: 'flex-start',
     },
     footerLinks: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: spacing.xl,
+        marginTop: spacing.md,
         paddingTop: spacing.xl,
         borderTopWidth: 1,
         borderTopColor: colors.softBorder,

@@ -50,7 +50,7 @@ export const useResetEngine = create<ResetEngineState>()(
             softenSelections: [],
             stabiliseAttempts: [],
             nextSteps: [],
-            currentSudsValue: 0,
+            currentSudsValue: 0.5,
             selectedSensations: [],
 
             startNewSession: () => {
@@ -70,7 +70,7 @@ export const useResetEngine = create<ResetEngineState>()(
                     softenSelections: [],
                     stabiliseAttempts: [],
                     nextSteps: [],
-                    currentSudsValue: 0,
+                    currentSudsValue: 0.5,
                     selectedSensations: [],
                 });
             },
@@ -79,7 +79,7 @@ export const useResetEngine = create<ResetEngineState>()(
                 set({
                     currentSession: session,
                     checkIns,
-                    currentSudsValue: checkIns.length > 0 ? checkIns[checkIns.length - 1].sudsRating : 0,
+                    currentSudsValue: checkIns.length > 0 ? checkIns[checkIns.length - 1].sudsRating : 0.5,
                     selectedSensations: [],
                 });
             },
@@ -258,7 +258,7 @@ export const useResetEngine = create<ResetEngineState>()(
                     softenSelections: [],
                     stabiliseAttempts: [],
                     nextSteps: [],
-                    currentSudsValue: 0,
+                    currentSudsValue: 0.5,
                     selectedSensations: [],
                 });
             },
